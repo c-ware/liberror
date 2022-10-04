@@ -7,8 +7,6 @@ LIBERROR_IS_NEGATIVE - error if a value is negative
 
 \fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br
-\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
-.br
 .SH DESCRIPTION
 This macro will produce an error message if the value provided to it is negative.
 

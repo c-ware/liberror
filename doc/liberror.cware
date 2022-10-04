@@ -10,8 +10,6 @@ liberror - macros used for runtime safety checks
 .br
 \fB#define LIBERROR_IS_POSITIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br
-\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
-.br
 \fB#define LIBERROR_IS_VALUE(\fR\fIvalue\fR\fB,\fR \fIis\fR\fB,\fR \fIrepr_value\fR\fB,\fR \fIrepr_is\fR\fB);\fR
 .br
 .SH DESCRIPTION

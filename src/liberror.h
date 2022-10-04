@@ -83,6 +83,16 @@
 
 #if defined(LIBERROR_ENABLED)
 
+/* The file stream to write to */
+#if !defined(LIBERROR_STREAM)
+#   define LIBERROR_STREAM  stderr
+#endif
+
+/* Whether or not to enable error checks */
+#if !defined(LIBERROR_ENABLED)
+#   define LIBERROR_ENABLED  1
+#endif
+
 /* liberror portability macros */
 #if defined(__ULTRIX__) || defined(__QuasiBSD__)
 #   if !defined(CWUTILS_GENERIC)
@@ -278,50 +288,6 @@
 /*
  * @docgen_start
  * @type: macro_function
- * @name: LIBERROR_IS_NEGATIVE
- * @brief: error if a value is negative
- *
- * @include: liberror/liberror.h
- *
- * @description
- * @This macro will produce an error message if the value provided to it is negative.
- * @description
- *
- * @mparam: value
- * @brief: the value to check for being negative
- *
- * @mparam: repr
- * @brief: the string representation of the value
- *
- * @examples
- * @#include "liberror/liberror.h"
- * @
- * @int main() {
- * @    int x = 3;
- * @
- * @    LIBERROR_IS_NEGATIVE(x, "3");
- * @
- * @    return 0;
- * @}
- * @examples
- *
- * @reference: cware(cware)
- * @reference: liberror(cware)
- *
- * @docgen_end
-*/
-#define LIBERROR_IS_NEGATIVE(value, repr)                                                             \
-    do {                                                                                              \
-        if(value > 0)                                                                                 \
-            break;                                                                                    \
-                                                                                                      \
-        fprintf(LIBERROR_STREAM, "number %s cannot be negative (%s:%i)\n", repr, __FILE__, __LINE__); \
-        abort();                                                                                      \
-    } while(0)
-
-/*
- * @docgen_start
- * @type: macro_function
  * @name: LIBERROR_IS_VALUE
  * @brief: error if a value is equal to another
  *
@@ -369,6 +335,14 @@
         fprintf(LIBERROR_STREAM, "%s cannot equal %s (%s:%i)\n", repr_value, repr_is, __FILE__, __LINE__); \
         abort();                                                                                           \
     } while(0)
+
+#else
+
+#define LIBERROR_IS_NULL(value, repr)
+#define LIBERROR_IS_OOB(check, end)
+#define LIBERROR_IS_NEGATIVE(value, repr)
+#define LIBERROR_IS_POSITIVE(value, repr)
+#define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)
 
 #endif
 #endif
