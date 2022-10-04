@@ -329,11 +329,116 @@
 */
 #define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)                                                  \
     do {                                                                                                   \
-        if(value != is)                                                                                    \
+        if((value) != (is))                                                                                \
             break;                                                                                         \
                                                                                                            \
         fprintf(LIBERROR_STREAM, "%s cannot equal %s (%s:%i)\n", repr_value, repr_is, __FILE__, __LINE__); \
         abort();                                                                                           \
+    } while(0)
+
+/*
+ * ==========================
+ * # Domain specific errors #
+ * ==========================
+*/
+
+/*
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_MALLOC_FAILURE
+ * @brief: error if a call to malloc failed
+ *
+ * @include: liberror/liberror.h
+ *
+ * @description
+ * @This macro will produce an error message if the variable provided to it
+ * @is NULL. It assumes that this is because of the result of a call to malloc
+ * @failing.
+ * @description
+ *
+ * @mparam: value
+ * @brief: the variable containing the pointer to check
+ *
+ * @mparam: repr
+ * @brief: the string name of the variable
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    void *x = malloc(sizeof(int) * 100);
+ * @
+ * @    LIBERROR_MALLOC_FAILURE(x, "x");
+ * @
+ * @    free(x);
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_MALLOC_FAILURE(value, repr)                                                                     \
+    do {                                                                                                         \
+        if((value) != CWUTILS_NULL)                                                                              \
+            break;                                                                                               \
+                                                                                                                 \
+        fprintf(LIBERROR_STREAM, "call to malloc for variable '%s' failed (%s:%i)\n", repr, __FILE__, __LINE__); \
+        abort();                                                                                           \
+    } while(0)
+
+/*
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_MALLOC_FAILURE
+ * @brief: error if a call to malloc failed
+ *
+ * @include: liberror/liberror.h
+ *
+ * @description
+ * @This macro will produce an error if the variable given to it is NULL, with
+ * @the assumption that if the variable is NULL, that it was because of a failure
+ * @to open the file
+ * @description
+ *
+ * @mparam: value
+ * @brief: the variable containing the pointer to check
+ *
+ * @mparam: repr
+ * @brief: the string name of the variable that was checked
+ *
+ * @mparam: file_path
+ * @brief: the path to the file
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    FILE *a_file = fopen("test.txt", "r");
+ * @
+ * @    LIBERROR_FILE_OPEN_FAILURE(a_file, "a_file", "test.txt");
+ * @
+ * @    free(x);
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_FILE_OPEN_FAILURE(value, repr, file_path)                                                                                 \
+    do {                                                                                                                                   \
+        if((value) != NULL)                                                                                                                \
+           break;                                                                                                                          \
+                                                                                                                                           \
+        fprintf(LIBERROR_STREAM, "failed to open file stored in variable '%s' at path '%s' (%s:%i)", repr, file_path, __FILE__, __LINE__); \
+        abort();                                                                                                                           \
     } while(0)
 
 #else
@@ -343,6 +448,7 @@
 #define LIBERROR_IS_NEGATIVE(value, repr)
 #define LIBERROR_IS_POSITIVE(value, repr)
 #define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)
+#define LIBERROR_MALLOC_FAILURE(value, repr)
 
 #endif
 #endif
