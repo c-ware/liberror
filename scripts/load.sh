@@ -1,14 +1,34 @@
 #!/bin/sh
 # Process all files with m4 and output them to their respective directories.
+# This should be called from the root directory of the project.
 
-# Process all manual pages
-for manual in ./templates/doc/*.template; do
-    manual_name=`basename $manual | cut -d '.' -f 1`
-    upper_manual_name=`echo $manual_name | tr '[a-z]' '[A-Z]'`
+# Load a Makefile. This performs a two-pass roll of m4.
+#
+# $1: the name of the Makefile (dist, 43bsd, etc)
+# $2: whether or not to use DOS path separators
+function process_makefile() {
+    if [ "$2" = "" ]; then
+        cat template/m4ke.m4 ./template/$1/header.m4 ./template/$1/Makefile | \
+            m4                                                              | \
+            cat template/m4ke.m4 ./template/$1/header.m4 -                  | \
+            m4                                                              | \
+            sed 's/^[[:space:]]*$//g'
+    else 
+        cat template/m4ke.m4 ./template/$1/header.m4 ./template/$1/Makefile | \
+            m4                                                              | \
+            cat template/m4ke.m4 ./template/$1/header.m4 -                  | \
+            m4                                                              | \
+            sed 's/^[[:space:]]*$//g' | sed 's/\//\\/g'
+    fi
+}
 
-    cat $manual | m4 -G --define=__file__=$manual | grep -v '^##' | sed "s/CWARE_MANUAL_NAME/$upper_manual_name/g" > ./doc/$manual_name.cware
-done
+# Process the Makefiles
+process_makefile dist       > Makefile.dist
+process_makefile 43bsd      > Makefile.43bsd
+process_makefile nix        > Makefile.nix
+process_makefile ult        > Makefile.ult
+process_makefile next       > Makefile.next
+process_makefile wat    1   > Makefile.wat
 
-# Process the Makefile
-m4 ./templates/Makefile.template > ./Makefile
-m4 ./templates/Makefile.dos.template > ./Makefile.dos
+# Load documentation
+cat src/liberror.h | docgen-extractor-c | docgen-compiler-c | docgen-backend-manpage --section 'cware' --title 'C-Ware Manuals' --date "`date +'%b %d, %Y'`"

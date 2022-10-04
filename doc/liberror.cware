@@ -1,205 +1,35 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-.TH "LIBERROR" "SECTION_HERE" "May 07, 2022" \
-" " "CATEGORY_NAME_HERE"
+.TH "liberror" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
 .SH NAME
-liberror - a collection of macro error handlers
-
-
+liberror - macros used for runtime safety checks
 .SH SYNOPSIS
-.B "#include ""liberror.h"""
+\fB#define LIBERROR_IS_NULL(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_OOB(\fR\fIvalue\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_POSITIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_VALUE(\fR\fIvalue\fR\fB,\fR \fIis\fR\fB,\fR \fIrepr_value\fR\fB,\fR \fIrepr_is\fR\fB);\fR
+.br
+.SH DESCRIPTION
+A collection of macros used for runtime safety checks, like checking if a
+pointer is NULL, if an index is out of the bounds, as well as context-specific
+macros like file opening failure, and malloc failure.
+
+Since safety checks can take a toll on higher-performance applications,
+the macros provided by \fBliberror\fR(cware) are togglable at compile time
+by defining the \fBLIBERROR_ENABLED\fR macro.
+
+If you want to use liberror, you will want to define the following macros
+at compile time, or in some central header:
 .br
 
-.BI "#define liberror_is_null(" \
-"function_name" \
-", " \
-"argument" \
-")
-.br"
-.BI "#define liberror_is_negative(" \
-"function_name" \
-", " \
-"argument" \
-")
-.br"
-.BI "#define liberror_is_positive(" \
-"function_name" \
-", " \
-"argument" \
-")
-.br"
-.BI "#define liberror_in_range(" \
-"function_name" \
-", " \
-"argument" \
-", " \
-"start" \
-", " \
-"end" \
-")
-.br"
-.BI "#define liberror_buffer_is_full(" \
-"function_name" \
-", " \
-"argument" \
-", " \
-"needed_size" \
-", " \
-"length" \
-")
-.br"
-.BI "#define liberror_is_number(" \
-"function_name" \
-", " \
-"argument" \
-", " \
-"format" \
-", " \
-"value" \
-")
-.br"
-.BI "#define liberror_failure(" \
-"function_name" \
-", " \
-"function" \
-")
-.br"
-.BI "#define liberror_unhandled(" \
-"function_name" \
-")
-.br"
-
-
-.SH DESCRIPTION
-A big problem people often have with C is its lack of safety. This is understandable.
-C is definitely not a very safe language. To achieve behavior like this,
-programmers must resort to doing things like error checking at runtime, as
-opposed to using C's type system, since it is quite primitive. 
-
-The purpose of this library is to make error checking at runtime a lot simpler
-by introducing macros which reduce the boilerplate required to do this kind of
-logic, since it can get quite repetitive. This library allows for enforcing
-runtime constraints on the range a number can be, a generic
-.BR "error" "(3)" ""
-error conditions, a 'should not get here' macro, and more.
-
-When the condition of one of the macros is met, the macro will display an
-error to the stderr, and
-.BR "abort" "(3)" ""
-the program. What follows is a list of each macro, and a brief description of
-it.
-
-.TS
-tab(;);
-lb l
-_ _
-lb l.
-Macro;Description;
-liberror_is_null;check for a NULL argumment;
-liberror_is_negative;check for a negative number;
-liberror_is_positive;check for a positive number;
-liberror_in_range;verify an argument is in a range of numbers;
-liberror_buffer_is_full;determine if a buffer was truncated when written to;
-liberror_is_number;determine if an argument is a certain number;
-liberror_failure;produce an error for a failed errno;
-liberror_unhandled;report an unhandled error;
-.TE
-
-
+\fB#define LIBERROR_STREAM   stderr\fR
+.br
+\fB#define LIBERROR_ENABLED\fR
 
 .SH SEE ALSO
-.BR "cware" "(cware)"
-
+cware(cware)

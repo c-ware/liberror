@@ -36,323 +36,339 @@
 */
 
 /*
- * liberror is a C library for helping you help yourself make your code safer.
- * Some notes about this library:
- *  - Every occurrence of 'raising an error' implies writing an error
- *    message to LIBERROR_STREAM, and expanding the LIBERROR_ERROR_CALLBACK
- *    macro, which defaults to aborting the program.
+ * @docgen_start
+ * @type: project
+ * @name: liberror
+ * @brief: macros used for runtime safety checks
  *
- * There are also two main macros to control some parts of error handling. These
- * two are LIBERROR_ENABLED, and LIBERROR_FREE_SAFETY.
+ * @embed: LIBERROR_IS_NULL
+ * @show_brief: 0
+ * 
+ * @embed: LIBERROR_IS_OOB
+ * @show_brief: 0
  *
- * LIBERROR_ENABLED, when defined, enables all liberror checks and will cause
- * all the macros to expand to actual error checks. Without this macro defined,
- * all of the error checking macros will expand to empty lines.
+ * @embed: LIBERROR_IS_NEGATIVE
+ * @show_brief: 0
+ *
+ * @embed: LIBERROR_IS_POSITIVE
+ * @show_brief: 0
+ *
+ * @embed: LIBERROR_IS_VALUE
+ * @show_brief: 0
+ *
+ * @description
+ * @A collection of macros used for runtime safety checks, like checking if a
+ * @pointer is NULL, if an index is out of the bounds, as well as context-specific
+ * @macros like file opening failure, and malloc failure.
+ * @
+ * @Since safety checks can take a toll on higher-performance applications,
+ * @the macros provided by \Bliberror\B(cware) are togglable at compile time
+ * @by defining the \BLIBERROR_ENABLED\B macro.
+ * @
+ * @If you want to use liberror, you will want to define the following macros
+ * @at compile time, or in some central header:\N
+ * @
+ * @\B#define LIBERROR_STREAM   stderr\B\N
+ * @\B#define LIBERROR_ENABLED\B
+ * @
+ * @description
+ *
+ * @reference: cware(cware)
+ *
+ * @docgen_end
 */
 
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef CWARE_LIBERROR_H
+#define CWARE_LIBERROR_H
+
+#if defined(LIBERROR_ENABLED)
+
+/* liberror portability macros */
+#if defined(__ULTRIX__) || defined(__QuasiBSD__)
+#   if !defined(CWUTILS_GENERIC)
+#       define CWUTILS_GENERIC char *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#       define CWUTILS_NULL    ((char *) 0)
+#   endif
+#else
+#   if !defined(CWUTILS_GENERIC)
+#      define CWUTILS_GENERIC void *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#      define CWUTILS_NULL    ((void *) 0)
+#   endif
+#endif
 
 /*
- * @docgen: constant
- * @brief: the stream to write errors to
- * @name: LIBERROR_STREAM
- * @value: stderr
-*/
-#define LIBERROR_STREAM     stderr
-
-/*
- * @docgen: macrro_function
- * @brief: handle an error condition
- * @name: LIBERROR_ERROR_CALLBACK
- *
- * @include: liberror.h
- *
- * @description
- * @This macro will be invoked in the scenario of an error condition being
- * @met. It is expanded after the error message is written to LIBERROR_STREAM.
- * @It defaults to flushing the stderr and aborting the progranm, although it
- * @can also perform error-specific code based off the type of error that is
- * @being handled.
- * @description
- *
- * @param type: the type of error being handdled
-*/
-#define LIBERROR_ERROR_CALLBACK(type) \
-    fflush(stderr);                   \
-    abort()
-
-/* The types of errors that can be raised */
-#define LIBERROR_TYPE_NULL          0
-#define LIBERROR_TYPE_BOUNDS        1
-#define LIBERROR_TYPE_FILE          2
-#define LIBERROR_TYPE_MALLOC        3
-#define LIBERROR_TYPE_NEGATIVE      4
-#define LIBERROR_TYPE_DOUBLE_FREE   5
-#define LIBERROR_TYPE_UNFREEABLE    6
-
-/*
- * @docgen: macro_function
- * @brief: initialize a variable
- * @name: LIBERROR_INIT
- *
- * @include: liberror.h
- * @sinclude: string.h
- *
- * @description
- * @This macro will take a variable, and initialize it with all zero's with the
- * @memset function.
- * @description
- *
- * @param v: the variable to initialize
-*/
-#define LIBERROR_INIT(v) \
-    memset(&(v), 0, sizeof((v)))
-
-#if LIBERROR_ENABLED == 1
-
-/*
- * @docgen: macro_function
- * @brief: generate a structure that contains debug information
- * @name: LIBERROR_BOOKKEEPING
- *
- * @include: liberror.h
- *
- * @description
- * @This macro is intended to be used inside the body of another
- * @structure. It generates a structure which is used by liberror
- * @for debugging, like detecting double frees.
- * @description
-*/
-#define LIBERROR_BOOKKEEPING() \
-    struct {                   \
-        int freed;             \
-        int freeable;          \
-    } liberror
-
-/*
- * @docgen: macro_function
- * @brief: toggle the object's freed field
- * @name: LIBERROR_TOGGLE_FREED
- *
- * @description
- * @This macro will toggle the pointer given to it as freed or unfreed.
- * @Intended to be used in *_free() functions.
- * @description
- *
- * @param ptr: the pointer to toggle
-*/
-#define LIBERROR_TOGGLE_FREED(ptr) \
-    (ptr)->liberror.freed = !ptr->liberror.freed
-
-/*
- * @docgen: macro_function
- * @brief: initialize the book keeping structure in a pointer
- * @name: LIBERROR_INIT_BOOKKEEPING
- *
- * @description
- * @This macro function will initialize book keeping data inside
- * @of the provided pointer.
- * @description
-*/
-#define LIBERROR_INIT_BOOKKEEPING(ptr) \
-    (ptr)->liberror.freed = 0
-
-#define LIBERROR_FREEABLE(ptr)                                                                         \
-    do {                                                                                               \
-        if((ptr)->liberror.freeable == 1)                                                              \
-           break;                                                                                      \
-                                                                                                       \
-        fprintf(LIBERROR_STREAM, "value " #ptr " cannot be freed (%s:%i)\n", __FILE__, __LINE__); \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_UNFREEABLE);                                             \
-    } while(0)
-
-#define LIBERROR_FREED(ptr)                                                                    \
-    do {                                                                                          \
-        if((ptr)->liberror.freed == 1)                                                                \
-           break;                                                                                 \
-                                                                                                  \
-        fprintf(LIBERROR_STREAM, "attempt to use freed value " #ptr " (%s:%i)\n", __FILE__, __LINE__); \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_UNFREEABLE);                                        \
-    } while(0)
-
-/*
- * @docgen: macro_function
- * @brief: raise an error if a value is NULL
+ * @docgen_start
+ * @type: macro_function
  * @name: LIBERROR_IS_NULL
+ * @brief: error if a value is null
  *
- * @include: liberror.h
+ * @include: liberror/liberror.h
  *
  * @description
- * @This macro will take a value to check for being NULL, and raises an error
- * @if the value is NULL.
+ * @This macro will produce an error message if the value provided to it is
+ * @NULL.
  * @description
  *
- * @param value: the value to check for NULL
+ * @mparam: value
+ * @brief: the value to check for being NULL
+ *
+ * @mparam: repr
+ * @brief: the string representation of the value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    char *x = "foo";
+ * @
+ * @    LIBERROR_IS_NULL(x, "foo");
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
 */
-#define LIBERROR_IS_NULL(value)                                                                    \
-    do {                                                                                           \
-        if((value) != NULL)                                                                        \
-            break;                                                                                 \
-                                                                                                   \
-        fprintf(LIBERROR_STREAM, "value " #value " cannot be NULL (%s:%i)\n", __FILE__, __LINE__); \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_NULL);                                               \
-    } while(0)
-
-
-/*
- * @docgen: macro_function
- * @brief: raise an error if an index is out of bounds
- * @name: LIBERROR_OUT_OF_BOUNDS
- *
- * @include: liberror.h
- *
- * @description
- * @This macro will take an index, and raise an error if the index is outside
- * @of the bounds of 0 and the length provided.
- * @description
- *
- * @param vindex: the index to check
- * @param length: the maximum length
-*/
-#define LIBERROR_OUT_OF_BOUNDS(vindex, length)                                                              \
-    do {                                                                                                    \
-        if(((vindex) >= 0) && ((vindex) < (length)))                                                        \
-            break;                                                                                          \
-                                                                                                            \
-        fprintf(LIBERROR_STREAM, "index %i is not within the bounds of 0 and %i (%s:%i)\n", vindex, length, \
-                __FILE__, __LINE__);                                                                        \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_BOUNDS);                                                      \
+#define LIBERROR_IS_NULL(value, repr)                                                      \
+    do {                                                                                   \
+        if(((CWUTILS_GENERIC) value) != (CWUTILS_NULL))                                    \
+            break;                                                                         \
+                                                                                           \
+        fprintf(LIBERROR_STREAM, "%s cannot be NULL (%s:%i)\n", repr, __FILE__, __LINE__); \
+        abort();                                                                           \
     } while(0)
 
 /*
- * @docgen: macro_function
- * @brief: raise an error if a value is something it should not be 
- * @name: LIBERROR_VALUE
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_OOB
+ * @brief: error if an index is out of bounds
  *
- * @include: liberror.h
+ * @include: liberror/liberror.h
  *
  * @description
- * @This macro will take a value, and if it is equal to something it should not be,
- * @it will raise an error.
+ * @This macro will produce an error message if the value provided to it is
+ * @not within the bounds of 0, and a variable
  * @description
  *
- * @param value: the value to check
- * @param cannot_be: the value it cannot be
+ * @mparam: value
+ * @brief: the value to check for being out of bounds
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    char x[16] = {0};
+ * @
+ * @    LIBERROR_IS_OOB(17, 16);
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
 */
-#define LIBERROR_VALUE(value, cannot_be) \
-    do {                                                                                                     \
-        if((value) != (cannot_be))                                                                           \
-            break;                                                                                           \
-                                                                                                             \
-        fprintf(LIBERROR_STREAM, "value " #value " cannot be " #cannot_be " (%s:%i)\n", __FILE__, __LINE__); \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_BOUNDS);                                                       \
+#define LIBERROR_IS_OOB(check, end)                                                                                      \
+    do {                                                                                                                 \
+        if((check >= 0) && (check < end))                                                                                \
+            break;                                                                                                       \
+                                                                                                                         \
+        fprintf(LIBERROR_STREAM, "index %i is out of the bounds of 0 and %i (%s:%i)\n", check, end, __FILE__, __LINE__); \
+        abort();                                                                                                         \
     } while(0)
 
 /*
- * @docgen: macro_function
- * @brief: raise an error if a value is negative
+ * @docgen_start
+ * @type: macro_function
  * @name: LIBERROR_IS_NEGATIVE
+ * @brief: error if a value is negative
  *
- * @include: liberror.h
+ * @include: liberror/liberror.h
  *
  * @description
- * @This macrro will raise an error if the value provided to it is negative.
- * @This is intended to be used on parameters, but can be used on any value.
- * @The index is casted to a signed long if its negative.
+ * @This macro will produce an error message if the value provided to it is negative.
  * @description
  *
- * @param value: the value to check
+ * @mparam: value
+ * @brief: the value to check for being negative
+ *
+ * @mparam: repr
+ * @brief: the string representation of the value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    int x = 3;
+ * @
+ * @    LIBERROR_IS_NEGATIVE(x, "3");
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
 */
-#define LIBERROR_IS_NEGATIVE(value)                                                     \
-    do {                                                                                \
-        if((value) >= 0)                                                                \
-            break;                                                                      \
-                                                                                        \
-        fprintf(LIBERROR_STREAM, #value " (%li) is negative (%s:%i)\n", ((long) value), \
-                __FILE__, __LINE__);                                                    \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_NEGATIVE);                                \
-    } while(0)
-
-/* More specific error generation macros. These exist to produce
- * more helpful error messages when the context for the scenario
- * is more known. */
-
-/*
- * @docgen: macro_function
- * @brief: raise an error if a malloc failed
- * @name: LIBERROR_MALLOC_FAILURE
- *
- * @include: liberror.h
- *
- * @description
- * @This macro will raise an error if a pointer is NULL, with the assumption that
- * @it is being called immediately after a call to malloc, calloc, or realloc.
- * @description
- *
- * @param ptr: the variable with the pointer to check
-*/
-#define LIBERROR_MALLOC_FAILURE(ptr)                                                         \
-    do {                                                                                     \
-        if((ptr) != NULL)                                                                    \
-            break;                                                                           \
-                                                                                             \
-        fprintf(LIBERROR_STREAM, "memory allocation failure for pointer " #ptr " (%s:%i)\n", \
-                __FILE__, __LINE__);                                                         \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_MALLOC);                                       \
+#define LIBERROR_IS_NEGATIVE(value, repr)                                                             \
+    do {                                                                                              \
+        if(value > 0)                                                                                 \
+            break;                                                                                    \
+                                                                                                      \
+        fprintf(LIBERROR_STREAM, "number %s cannot be negative (%s:%i)\n", repr, __FILE__, __LINE__); \
+        abort();                                                                                      \
     } while(0)
 
 /*
- * @docgen: macro_function
- * @brief: raise an error if a pointer was already freed.
- * @name: LIBERROR_DOUBLE_FREE
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_POSITIVE
+ * @brief: error if a value is positive
  *
- * @include liberror.h
+ * @include: liberror/liberror.h
  *
  * @description
- * @This macro will raise an error if the pointer contains a field called
- * @liberror_freed that is toggled on. It is used to mark a structure as
- * @released from memory.
+ * @This macro will produce an error message if the value provided to it is positive.
  * @description
  *
- * @param ptr: the pointer to check
+ * @mparam: value
+ * @brief: the value to check for being positive
+ *
+ * @mparam: repr
+ * @brief: the string representation of the value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    int x = 3;
+ * @
+ * @    LIBERROR_IS_POSITIVE(x, "3");
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
 */
-#define LIBERROR_DOUBLE_FREE(ptr)                                                              \
-    do {                                                                                       \
-        if((ptr)->liberror.freed == 0)                                                         \
-            break;                                                                             \
-                                                                                               \
-        fprintf(LIBERROR_STREAM, "attempt to release already freed pointer" #ptr " (%s:%i)\n", \
-                __FILE__, __LINE__);                                                           \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_MALLOC);                                         \
+#define LIBERROR_IS_POSITIVE(value, repr)                                                                \
+    do {                                                                                                 \
+        if(value < 0)                                                                                    \
+            break;                                                                                       \
+                                                                                                         \
+        fprintf(LIBERROR_STREAM, "number %s is cannot be positive (%s:%i)\n", repr, __FILE__, __LINE__); \
+        abort();                                                                                         \
     } while(0)
 
 /*
- * @docgen: macro_function
- * @brief: raise an error if a file failed to open
- * @name: LIBERROR_FILE_OPEN_FAILURE
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_NEGATIVE
+ * @brief: error if a value is negative
  *
- * @include: liberror.h
+ * @include: liberror/liberror.h
  *
  * @description
- * @This macro will take what it expects to be a file pointer, and raise an
- * @error if it was NULL. If it is NULL, the error reported contains additional
- * @data to report to the output.
+ * @This macro will produce an error message if the value provided to it is negative.
  * @description
  *
- * @param file: the file pointer to check
- * @param path: the expected path to the file
+ * @mparam: value
+ * @brief: the value to check for being negative
+ *
+ * @mparam: repr
+ * @brief: the string representation of the value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    int x = 3;
+ * @
+ * @    LIBERROR_IS_NEGATIVE(x, "3");
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
 */
-#define LIBERROR_FILE_OPEN_FAILURE(file, path)                                                      \
-    do {                                                                                            \
-        if((file) != NULL)                                                                          \
-            break;                                                                                  \
-                                                                                                    \
-        fprintf(LIBERROR_STREAM, "failed to open file '%s' (%s) (%s:%i)\n", path, strerror(errno),  \
-                __FILE__, __LINE__);                                                                \
-        LIBERROR_ERROR_CALLBACK(LIBERROR_TYPE_FILE);                                   \
+#define LIBERROR_IS_NEGATIVE(value, repr)                                                             \
+    do {                                                                                              \
+        if(value > 0)                                                                                 \
+            break;                                                                                    \
+                                                                                                      \
+        fprintf(LIBERROR_STREAM, "number %s cannot be negative (%s:%i)\n", repr, __FILE__, __LINE__); \
+        abort();                                                                                      \
     } while(0)
 
+/*
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_VALUE
+ * @brief: error if a value is equal to another
+ *
+ * @include: liberror/liberror.h
+ *
+ * @description
+ * @This macro will produce an error message if the values provided to it
+ * @are equal to each other
+ * @description
+ *
+ * @mparam: value
+ * @brief: the first value
+ *
+ * @mparam: is
+ * @brief: the second value
+ *
+ * @mparam: repr_value
+ * @brief: the string representation of the first value
+ *
+ * @mparam: repr_is
+ * @brief: the string representation of the second value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    int x = 3;
+ * @
+ * @    LIBERROR_IS_VALUE(x, 3, "x", "3");
+ * @
+ * @    return 0;
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)                                                  \
+    do {                                                                                                   \
+        if(value != is)                                                                                    \
+            break;                                                                                         \
+                                                                                                           \
+        fprintf(LIBERROR_STREAM, "%s cannot equal %s (%s:%i)\n", repr_value, repr_is, __FILE__, __LINE__); \
+        abort();                                                                                           \
+    } while(0)
+
+#endif
 #endif

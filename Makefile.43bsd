@@ -1,0 +1,60 @@
+# A collection of m4 macros to make writing Makefiles easier.
+# Recommended for a two-pass m4 system.
+
+
+
+
+
+
+
+
+
+
+
+# Define the implicit rules
+
+
+
+
+
+
+# A collection of m4 macros to make writing Makefiles easier.
+# Recommended for a two-pass m4 system.
+
+
+
+
+
+
+
+
+
+
+
+# Define the implicit rules
+
+
+
+
+
+
+# Makefile for 4.3 BSD
+
+M4=m4
+
+CC=cc
+CFLAGS=-D__QuasiBSD__ -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
+TESTS=tests/compile 
+
+all: $(TESTS)
+
+clean:
+	rm -f $(TESTS)
+
+.SUFFIXES:
+
+tests/compile: tests/compile.c 
+	$(CC) tests/compile.c $(CFLAGS) -o tests/compile
+
+
+.PHONY: all clean

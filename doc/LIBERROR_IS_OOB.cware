@@ -1,0 +1,37 @@
+.TH "LIBERROR_IS_OOB" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_OOB - error if an index is out of bounds
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_OOB(\fR\fIvalue\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if the value provided to it is
+not within the bounds of 0, and a variable
+
+
+\fIvalue\fR will be the value to check for being out of bounds
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    char x[16] = {0};
+.br
+
+.br
+    LIBERROR_IS_OOB(17, 16);
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)

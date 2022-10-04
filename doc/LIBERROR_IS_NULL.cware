@@ -1,0 +1,39 @@
+.TH "LIBERROR_IS_NULL" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_NULL - error if a value is null
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_NULL(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if the value provided to it is
+NULL.
+
+
+\fIvalue\fR will be the value to check for being NULL
+.br
+\fIrepr\fR will be the string representation of the value
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    char *x = "foo";
+.br
+
+.br
+    LIBERROR_IS_NULL(x, "foo");
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)

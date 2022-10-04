@@ -1,0 +1,61 @@
+# A collection of m4 macros to make writing Makefiles easier.
+# Recommended for a two-pass m4 system.
+
+
+
+
+
+
+
+
+
+
+
+# Define the implicit rules
+
+
+
+# A collection of m4 macros to make writing Makefiles easier.
+# Recommended for a two-pass m4 system.
+
+
+
+
+
+
+
+
+
+
+
+# Define the implicit rules
+
+
+
+
+M4=m4
+
+CC=cc
+PREFIX=/usr/local
+CFLAGS=-Wall -Wextra -Wpedantic -Wno-unused-but-set-variable -g -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
+TESTS=tests/compile 
+DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
+
+all: $(TESTS)
+
+install: maninstall
+
+clean:
+	rm -f $(TESTS)
+	rm -f $(EXAMPLES)
+
+maninstall:
+	mkdir -p $(PREFIX)/share/man/mancware
+	cp $(DOCS) $(PREFIX)/share/man/mancware
+
+tests/compile: tests/compile.c 
+	$(CC) tests/compile.c $(CFLAGS) -o tests/compile
+
+
+.PHONY: all clean install maninstall
+.SUFFIXES:

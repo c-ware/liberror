@@ -1,0 +1,43 @@
+.TH "LIBERROR_IS_VALUE" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_VALUE - error if a value is equal to another
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_VALUE(\fR\fIvalue\fR\fB,\fR \fIis\fR\fB,\fR \fIrepr_value\fR\fB,\fR \fIrepr_is\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if the values provided to it
+are equal to each other
+
+
+\fIvalue\fR will be the first value
+.br
+\fIis\fR will be the second value
+.br
+\fIrepr_value\fR will be the string representation of the first value
+.br
+\fIrepr_is\fR will be the string representation of the second value
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    int x = 3;
+.br
+
+.br
+    LIBERROR_IS_VALUE(x, 3, "x", "3");
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)

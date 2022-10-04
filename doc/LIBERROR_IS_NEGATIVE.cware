@@ -1,0 +1,40 @@
+.TH "LIBERROR_IS_NEGATIVE" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_NEGATIVE - error if a value is negative
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if the value provided to it is negative.
+
+
+\fIvalue\fR will be the value to check for being negative
+.br
+\fIrepr\fR will be the string representation of the value
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    int x = 3;
+.br
+
+.br
+    LIBERROR_IS_NEGATIVE(x, "3");
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)
