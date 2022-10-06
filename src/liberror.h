@@ -234,7 +234,7 @@
 */
 #define LIBERROR_IS_NEGATIVE(value, repr)                                                             \
     do {                                                                                              \
-        if(value > 0)                                                                                 \
+        if(value >= 0)                                                                                \
             break;                                                                                    \
                                                                                                       \
         fprintf(LIBERROR_STREAM, "number %s cannot be negative (%s:%i)\n", repr, __FILE__, __LINE__); \
@@ -278,7 +278,7 @@
 */
 #define LIBERROR_IS_POSITIVE(value, repr)                                                                \
     do {                                                                                                 \
-        if(value < 0)                                                                                    \
+        if(value <= 0)                                                                                    \
             break;                                                                                       \
                                                                                                          \
         fprintf(LIBERROR_STREAM, "number %s is cannot be positive (%s:%i)\n", repr, __FILE__, __LINE__); \
