@@ -111,7 +111,7 @@ define(`LIBERROR_IS_VALUE_M4', `
 
 define(`LIBERROR_MALLOC_FAILURE_M4', `
     do {
-        if(($1) != CWUTILS_NULL)
+        if(((CWUTILS_GENERIC) ($1)) != CWUTILS_NULL)
             break;
 
         fprintf(LIBERROR_STREAM, "call to malloc for variable \"%s\" failed (%s:%i)\n", ($2), __FILE__, __LINE__);
@@ -121,7 +121,7 @@ define(`LIBERROR_MALLOC_FAILURE_M4', `
 
 define(`LIBERROR_FILE_OPEN_FAILURE_M4', `
     do {
-        if(($1) != NULL)
+        if(((CWUTILS_GENERIC) ($1)) != NULL)
            break;
 
         fprintf(LIBERROR_STREAM, "failed to open file stored in variable \"%s\" at path \"%s\" (%s:%i)", ($2), ($3), __FILE__, __LINE__);
