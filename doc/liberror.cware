@@ -1,4 +1,4 @@
-.TH "liberror" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.TH "liberror" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
 .SH NAME
 liberror - macros used for runtime safety checks
 .SH SYNOPSIS

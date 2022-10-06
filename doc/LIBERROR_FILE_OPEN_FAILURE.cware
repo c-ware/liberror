@@ -1,0 +1,46 @@
+.TH "LIBERROR_FILE_OPEN_FAILURE" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_FILE_OPEN_FAILURE - error if a file failed to open
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_FILE_OPEN_FAILURE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB,\fR \fIfile_path\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error if the variable given to it is NULL, with
+the assumption that if the variable is NULL, that it was because of a failure
+to open the file
+
+
+\fIvalue\fR will be the variable containing the pointer to check
+.br
+\fIrepr\fR will be the string name of the variable that was checked
+.br
+\fIfile_path\fR will be the path to the file
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    FILE *a_file = fopen("test.txt", "r");
+.br
+
+.br
+    LIBERROR_FILE_OPEN_FAILURE(a_file, "a_file", "test.txt");
+.br
+
+.br
+    free(x);
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)

@@ -1,0 +1,44 @@
+.TH "LIBERROR_MALLOC_FAILURE" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_MALLOC_FAILURE - error if a call to malloc failed
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_MALLOC_FAILURE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if the variable provided to it
+is NULL. It assumes that this is because of the result of a call to malloc
+failing.
+
+
+\fIvalue\fR will be the variable containing the pointer to check
+.br
+\fIrepr\fR will be the string name of the variable
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+.br
+
+.br
+int main() {
+.br
+    void *x = malloc(sizeof(int) * 100);
+.br
+
+.br
+    LIBERROR_MALLOC_FAILURE(x, "x");
+.br
+
+.br
+    free(x);
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+cware(cware), liberror(cware)

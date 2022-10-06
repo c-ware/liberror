@@ -393,8 +393,8 @@
 /*
  * @docgen_start
  * @type: macro_function
- * @name: LIBERROR_MALLOC_FAILURE
- * @brief: error if a call to malloc failed
+ * @name: LIBERROR_FILE_OPEN_FAILURE
+ * @brief: error if a file failed to open
  *
  * @include: liberror/liberror.h
  *

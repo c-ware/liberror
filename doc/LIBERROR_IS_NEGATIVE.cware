@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_NEGATIVE" "cware" "Oct 04, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_NEGATIVE" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_NEGATIVE - error if a value is negative
 .SH SYNOPSIS

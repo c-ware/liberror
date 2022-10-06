@@ -46,7 +46,7 @@ CC=cc
 CFLAGS=-DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
 PREFIX=/usr/local
 TESTS=tests/compile 
-DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
+DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_MALLOC_FAILURE.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
 
 all: $(TESTS)
 
