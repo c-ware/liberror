@@ -5,14 +5,16 @@ LIBERROR_IS_OOB - error if an index is out of bounds
 #include "liberror/liberror.h"
 .br
 
-\fB#define LIBERROR_IS_OOB(\fR\fIvalue\fR\fB);\fR
+\fB#define LIBERROR_IS_OOB(\fR\fIcheck\fR\fB,\fR \fIend\fR\fB);\fR
 .br
 .SH DESCRIPTION
 This macro will produce an error message if the value provided to it is
 not within the bounds of 0, and a variable
 
 
-\fIvalue\fR will be the value to check for being out of bounds
+\fIcheck\fR will be the value to check for being out of bounds
+.br
+\fIend\fR will be the length of the thing to index
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"

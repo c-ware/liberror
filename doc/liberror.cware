@@ -4,7 +4,7 @@ liberror - macros used for runtime safety checks
 .SH SYNOPSIS
 \fB#define LIBERROR_IS_NULL(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br
-\fB#define LIBERROR_IS_OOB(\fR\fIvalue\fR\fB);\fR
+\fB#define LIBERROR_IS_OOB(\fR\fIcheck\fR\fB,\fR \fIend\fR\fB);\fR
 .br
 \fB#define LIBERROR_IS_NEGATIVE(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br

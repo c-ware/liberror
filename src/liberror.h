@@ -151,8 +151,11 @@
  * @not within the bounds of 0, and a variable
  * @description
  *
- * @mparam: value
+ * @mparam: check
  * @brief: the value to check for being out of bounds
+ *
+ * @mparam: end
+ * @brief: the length of the thing to index
  *
  * @examples
  * @#include "liberror/liberror.h"
