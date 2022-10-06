@@ -366,11 +366,11 @@
 */
 #define LIBERROR_MALLOC_FAILURE(value, repr)                                                                     \
     do {                                                                                                         \
-        if((value) != CWUTILS_NULL)                                                                              \
+        if(((CWUTILS_GENERIC) (value)) != CWUTILS_NULL)                                                          \
             break;                                                                                               \
                                                                                                                  \
         fprintf(LIBERROR_STREAM, "call to malloc for variable '%s' failed (%s:%i)\n", repr, __FILE__, __LINE__); \
-        abort();                                                                                           \
+        abort();                                                                                                 \
     } while(0)
 
 /*
@@ -417,7 +417,7 @@
 */
 #define LIBERROR_FILE_OPEN_FAILURE(value, repr, file_path)                                                                                 \
     do {                                                                                                                                   \
-        if((value) != NULL)                                                                                                                \
+        if(((CWUTILS_GENERIC) (value)) != NULL)                                                                                            \
            break;                                                                                                                          \
                                                                                                                                            \
         fprintf(LIBERROR_STREAM, "failed to open file stored in variable '%s' at path '%s' (%s:%i)", repr, file_path, __FILE__, __LINE__); \
