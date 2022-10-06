@@ -1,4 +1,4 @@
-.TH "LIBERROR_FILE_OPEN_FAILURE" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_FILE_OPEN_FAILURE" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_FILE_OPEN_FAILURE - error if a file failed to open
 .SH SYNOPSIS

@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_OOB" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_OOB" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_OOB - error if an index is out of bounds
 .SH SYNOPSIS

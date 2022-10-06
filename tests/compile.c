@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #endif
 
+#include "common.h"
 #include "../src/liberror.h"
 
 int main() {

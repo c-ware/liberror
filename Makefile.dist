@@ -38,12 +38,15 @@ M4=m4
 CC=cc
 PREFIX=/usr/local
 CFLAGS=-Wall -Wextra -Wpedantic -Wno-unused-but-set-variable -g -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
-TESTS=tests/compile 
-DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_MALLOC_FAILURE.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
+TESTS=tests/m4compil tests/compile  tests/m4compil
+DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_FILE_OPEN_FAILURE.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_MALLOC_FAILURE.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
 
-all: $(TESTS)
+all: tests/m4compil.c $(TESTS)
 
 install: maninstall
+
+dist_clean:
+	rm -f tests/m4compile.c
 
 clean:
 	rm -f $(TESTS)
@@ -53,9 +56,14 @@ maninstall:
 	mkdir -p $(PREFIX)/share/man/mancware
 	cp $(DOCS) $(PREFIX)/share/man/mancware
 
+tests/m4compil: tests/m4compil.c 
+	$(CC) tests/m4compil.c $(CFLAGS) -o tests/m4compil
 tests/compile: tests/compile.c 
 	$(CC) tests/compile.c $(CFLAGS) -o tests/compile
 
+
+tests/m4compil.c: tests/m4compil.m4c
+	$(M4) tests/m4compil.m4c > tests/m4compil.c
 
 .PHONY: all clean install maninstall
 .SUFFIXES:

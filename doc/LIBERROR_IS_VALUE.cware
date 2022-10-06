@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_VALUE" "cware" "Oct 05, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_VALUE" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_VALUE - error if a value is equal to another
 .SH SYNOPSIS

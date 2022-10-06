@@ -93,23 +93,6 @@
 #   define LIBERROR_ENABLED  1
 #endif
 
-/* liberror portability macros */
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#endif
-
 /*
  * @docgen_start
  * @type: macro_function
@@ -449,6 +432,7 @@
 #define LIBERROR_IS_POSITIVE(value, repr)
 #define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)
 #define LIBERROR_MALLOC_FAILURE(value, repr)
+#define LIBERROR_FILE_OPEN_FAILURE(value, repr, file_path)
 
 #endif
 #endif
