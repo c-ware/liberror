@@ -86,11 +86,6 @@
 #   define LIBERROR_STREAM  stderr
 #endif
 
-/* Whether or not to enable error checks */
-#if !defined(LIBERROR_ENABLED)
-#   define LIBERROR_ENABLED  1
-#endif
-
 #if defined(LIBERROR_ENABLED)
 
 /*
