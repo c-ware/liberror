@@ -68,6 +68,9 @@
  * @embed: LIBERROR_STATE_INIT
  * @show_brief: 0
  *
+ * @embed: LIBERROR_STATE_SET
+ * @show_brief: 0
+ *
  * @description
  * @A collection of macros used for runtime safety checks, like checking if a
  * @pointer is NULL, if an index is out of the bounds, as well as context-specific
@@ -178,6 +181,49 @@
 */
 #define LIBERROR_STATE_INIT(container) \
     (container)->liberror_state = LIBERROR_STATE_OK
+
+/* 
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_STATE_SET
+ * @brief: set the state of a data structure
+ *
+ * @description
+ * @This macro function will assign the state of the data structure.
+ * @description
+ * 
+ * @mparam: container
+ * @brief: pointer to the structure to set the state of
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @struct MyStructure {
+ * @    int x;
+ * @    int y;
+ * @
+ * @    LIBERROR_STATE();\N
+ * @};
+ * @
+ * @int main(void) {
+ * @    struct MyStructure structure;
+ * @
+ * @    structure.x = 1;
+ * @    structure.y = 1;
+ * @
+ * @    // Initialize the state, setting it as read only.
+ * @    LIBERROR_STATE_INIT(&structure);
+ * @    LIBERROR_STATE_SET(&structure, LIBERROR_STATE_READONLY);
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_STATE_SET(container, state) \
+    (container)->liberror_state = (state)
 
 /*
  * @docgen_start

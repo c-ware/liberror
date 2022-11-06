@@ -1,0 +1,35 @@
+.TH "LIBERROR_STATE_SET" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_STATE_SET - set the state of a data structure
+.SH SYNOPSIS
+\fB#define LIBERROR_STATE_SET(\fR\fIcontainer\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro function will assign the state of the data structure.
+
+
+\fIcontainer\fR will be pointer to the structure to set the state of
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+
+struct MyStructure {
+    int x;
+    int y;
+
+    LIBERROR_STATE();
+.br
+};
+
+int main(void) {
+    struct MyStructure structure;
+
+    structure.x = 1;
+    structure.y = 1;
+
+    // Initialize the state, setting it as read only.
+    LIBERROR_STATE_INIT(&structure);
+    LIBERROR_STATE_SET(&structure, LIBERROR_STATE_READONLY);
+}
+.SH SEE ALSO
+cware(cware), liberror(cware)

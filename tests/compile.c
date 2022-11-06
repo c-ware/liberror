@@ -23,6 +23,7 @@ int main() {
     struct MyStructure structure;
 
     LIBERROR_STATE_INIT(&structure);
+    LIBERROR_STATE_SET(&structure, LIBERROR_STATE_READONLY);
 
     LIBERROR_IS_NULL(x, "foo");
     LIBERROR_IS_OOB(3, 10);

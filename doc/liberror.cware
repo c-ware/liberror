@@ -6,6 +6,8 @@ liberror - macros used for runtime safety checks
 .br
 \fB#define LIBERROR_STATE_INIT(\fR\fIcontainer\fR\fB);\fR
 .br
+\fB#define LIBERROR_STATE_SET(\fR\fIcontainer\fR\fB);\fR
+.br
 \fB#define LIBERROR_IS_NULL(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br
 \fB#define LIBERROR_IS_OOB(\fR\fIcheck\fR\fB,\fR \fIend\fR\fB);\fR
