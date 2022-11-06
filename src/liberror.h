@@ -664,9 +664,12 @@
 
 #else
 
+/* State junk */
 #define LIBERROR_STATE()
 #define LIBERROR_STATE_INIT(container)
+#define LIBERROR_STATE_SET(container, state)
 
+/* Base error checks */
 #define LIBERROR_IS_NULL(value, repr)
 #define LIBERROR_IS_OOB(check, end)
 #define LIBERROR_IS_NEGATIVE(value, repr)
@@ -674,6 +677,8 @@
 #define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)
 #define LIBERROR_IS_GREATER(x, y, repr_x, repr_y)
 #define LIBERROR_IS_READONLY(value, repr_value)
+
+/* Domain-specific checks */
 #define LIBERROR_MALLOC_FAILURE(value, repr)
 #define LIBERROR_FILE_OPEN_FAILURE(value, repr, file_path)
 
