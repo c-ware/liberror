@@ -1,4 +1,4 @@
-.TH "LIBERROR_FILE_OPEN_FAILURE" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_FILE_OPEN_FAILURE" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_FILE_OPEN_FAILURE - error if a file failed to open
 .SH SYNOPSIS
@@ -21,26 +21,16 @@ to open the file
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"
-.br
 
-.br
 int main() {
-.br
     FILE *a_file = fopen("test.txt", "r");
-.br
 
-.br
     LIBERROR_FILE_OPEN_FAILURE(a_file, "a_file", "test.txt");
-.br
 
-.br
     free(x);
-.br
 
-.br
     return 0;
 .br
 }
-.br
 .SH SEE ALSO
 cware(cware), liberror(cware)

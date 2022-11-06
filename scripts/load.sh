@@ -6,7 +6,7 @@
 #
 # $1: the name of the Makefile (dist, 43bsd, etc)
 # $2: whether or not to use DOS path separators
-function process_makefile() {
+process_makefile() {
     if [ "$2" = "" ]; then
         cat template/m4ke.m4 ./template/$1/header.m4 ./template/$1/Makefile | \
             m4                                                              | \

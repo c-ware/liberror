@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_POSITIVE" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_POSITIVE" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_POSITIVE - error if a value is positive
 .SH SYNOPSIS
@@ -17,22 +17,13 @@ This macro will produce an error message if the value provided to it is positive
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"
-.br
 
-.br
 int main() {
-.br
     int x = 3;
-.br
 
-.br
     LIBERROR_IS_POSITIVE(x, "3");
-.br
 
-.br
     return 0;
-.br
 }
-.br
 .SH SEE ALSO
 cware(cware), liberror(cware)

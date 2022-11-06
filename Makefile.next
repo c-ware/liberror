@@ -46,8 +46,8 @@ CC=cc
 CPP=/lib/cpp
 CFLAGS=
 CPPFLAGS=-I/usr/include -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
-TESTS=tests/m4compil tests/compile 
-DOCS=doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/liberror.cware doc/LIBERROR_FILE_OPEN_FAILURE.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_MALLOC_FAILURE.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_OOB.cware 
+TESTS=tests/compile 
+DOCS=doc/LIBERROR_FILE_OPEN_FAILURE.cware doc/LIBERROR_IS_NEGATIVE.cware doc/LIBERROR_IS_NULL.cware doc/LIBERROR_IS_OOB.cware doc/LIBERROR_IS_POSITIVE.cware doc/LIBERROR_IS_VALUE.cware doc/LIBERROR_MALLOC_FAILURE.cware doc/liberror.cware doc/LIBERROR_STATE.cware doc/LIBERROR_IS_GREATER.cware doc/LIBERROR_IS_READONLY.cware doc/LIBERROR_STATE_INIT.cware 
 
 all: $(TESTS)
 
@@ -63,9 +63,6 @@ clean:
 
 .SUFFIXES:
 
-tests/m4compil: tests/m4compil.c 
-	$(CPP) $(CPPFLAGS) tests/m4compil.c > tests/m4compil.c.i
-	$(CC) tests/m4compil.c.i $(CFLAGS) -o tests/m4compil
 tests/compile: tests/compile.c 
 	$(CPP) $(CPPFLAGS) tests/compile.c > tests/compile.c.i
 	$(CC) tests/compile.c.i $(CFLAGS) -o tests/compile

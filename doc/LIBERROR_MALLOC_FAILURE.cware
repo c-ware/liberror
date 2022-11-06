@@ -1,4 +1,4 @@
-.TH "LIBERROR_MALLOC_FAILURE" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_MALLOC_FAILURE" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_MALLOC_FAILURE - error if a call to malloc failed
 .SH SYNOPSIS
@@ -19,26 +19,16 @@ failing.
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"
-.br
 
-.br
 int main() {
-.br
     void *x = malloc(sizeof(int) * 100);
-.br
 
-.br
     LIBERROR_MALLOC_FAILURE(x, "x");
-.br
 
-.br
     free(x);
-.br
 
-.br
     return 0;
 .br
 }
-.br
 .SH SEE ALSO
 cware(cware), liberror(cware)

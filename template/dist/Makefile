@@ -26,8 +26,5 @@ maninstall:
 
 GENERATE_RULES(tests, .c,)
 
-tests/m4compil.c: tests/m4compil.m4c
-	$(M4) tests/m4compil.m4c > tests/m4compil.c
-
 .PHONY: all clean install maninstall
 .SUFFIXES:

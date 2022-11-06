@@ -1,0 +1,35 @@
+.TH "LIBERROR_IS_GREATER" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_GREATER - error if a value is greater than another
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_GREATER(\fR\fIx\fR\fB,\fR \fIy\fR\fB,\fR \fIrepr_x\fR\fB,\fR \fIrepr_y\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if a value provided to it is
+greater than another one.
+
+
+\fIx\fR will be the value that should be smaller
+.br
+\fIy\fR will be the value that should be bigger
+.br
+\fIrepr_x\fR will be the string representation of the first value
+.br
+\fIrepr_y\fR will be the string representation of the second value
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+
+int main() {
+    int x = 3;
+
+    LIBERROR_IS_GREATER(x, 1, "x", "1");
+
+    return 0;
+.br
+}
+.SH SEE ALSO
+cware(cware), liberror(cware)

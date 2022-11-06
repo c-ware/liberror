@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_NULL" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_NULL" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_NULL - error if a value is null
 .SH SYNOPSIS
@@ -18,22 +18,13 @@ NULL.
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"
-.br
 
-.br
 int main() {
-.br
     char *x = "foo";
-.br
 
-.br
     LIBERROR_IS_NULL(x, "foo");
-.br
 
-.br
     return 0;
-.br
 }
-.br
 .SH SEE ALSO
 cware(cware), liberror(cware)

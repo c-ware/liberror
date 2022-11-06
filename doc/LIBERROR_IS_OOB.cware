@@ -1,4 +1,4 @@
-.TH "LIBERROR_IS_OOB" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "LIBERROR_IS_OOB" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 LIBERROR_IS_OOB - error if an index is out of bounds
 .SH SYNOPSIS
@@ -18,22 +18,13 @@ not within the bounds of 0, and a variable
 .br
 .SH EXAMPLES
 #include "liberror/liberror.h"
-.br
 
-.br
 int main() {
-.br
     char x[16] = {0};
-.br
 
-.br
     LIBERROR_IS_OOB(17, 16);
-.br
 
-.br
     return 0;
-.br
 }
-.br
 .SH SEE ALSO
 cware(cware), liberror(cware)

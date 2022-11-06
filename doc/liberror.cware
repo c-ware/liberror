@@ -1,7 +1,11 @@
-.TH "liberror" "cware" "Oct 06, 2022" "" "C-Ware Manuals"
+.TH "liberror" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
 .SH NAME
 liberror - macros used for runtime safety checks
 .SH SYNOPSIS
+\fB#define LIBERROR_STATE(\fR\fB);\fR
+.br
+\fB#define LIBERROR_STATE_INIT(\fR\fIcontainer\fR\fB);\fR
+.br
 \fB#define LIBERROR_IS_NULL(\fR\fIvalue\fR\fB,\fR \fIrepr\fR\fB);\fR
 .br
 \fB#define LIBERROR_IS_OOB(\fR\fIcheck\fR\fB,\fR \fIend\fR\fB);\fR
@@ -12,12 +16,17 @@ liberror - macros used for runtime safety checks
 .br
 \fB#define LIBERROR_IS_VALUE(\fR\fIvalue\fR\fB,\fR \fIis\fR\fB,\fR \fIrepr_value\fR\fB,\fR \fIrepr_is\fR\fB);\fR
 .br
+\fB#define LIBERROR_IS_GREATER(\fR\fIx\fR\fB,\fR \fIy\fR\fB,\fR \fIrepr_x\fR\fB,\fR \fIrepr_y\fR\fB);\fR
+.br
+\fB#define LIBERROR_IS_READONLY(\fR\fIvalue\fR\fB,\fR \fIrepr_value\fR\fB);\fR
+.br
 .SH DESCRIPTION
 A collection of macros used for runtime safety checks, like checking if a
 pointer is NULL, if an index is out of the bounds, as well as context-specific
-macros like file opening failure, and malloc failure.
+macros like file opening failure, and malloc failure. It can even be used
+to prevent the programmer from using read-only data with the state system.
 
-Since safety checks can take a toll on higher-performance applications,
+Since safety checks can take a toll on higher-performance applications, so
 the macros provided by \fBliberror\fR(cware) are togglable at compile time
 by defining the \fBLIBERROR_ENABLED\fR macro.
 
@@ -29,5 +38,7 @@ at compile time, or in some central header:
 .br
 \fB#define LIBERROR_ENABLED\fR
 
+Each of the macros shown in the synopsis have their own corresponding
+manual page.
 .SH SEE ALSO
 cware(cware)

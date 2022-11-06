@@ -44,7 +44,7 @@ M4=m4
 
 CC=cc
 CFLAGS=-D__QuasiBSD__ -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
-TESTS=tests/m4compil tests/compile 
+TESTS=tests/compile 
 
 all: $(TESTS)
 
@@ -53,8 +53,6 @@ clean:
 
 .SUFFIXES:
 
-tests/m4compil: tests/m4compil.c 
-	$(CC) tests/m4compil.c $(CFLAGS) -o tests/m4compil
 tests/compile: tests/compile.c 
 	$(CC) tests/compile.c $(CFLAGS) -o tests/compile
 

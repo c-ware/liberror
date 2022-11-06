@@ -1,0 +1,33 @@
+.TH "LIBERROR_STATE_INIT" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_STATE_INIT - initialize the state object in a structure
+.SH SYNOPSIS
+\fB#define LIBERROR_STATE_INIT(\fR\fIcontainer\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro function will initialize the state object in a structure
+to have a default value of LIBERROR_STATE_OK.
+
+
+\fIcontainer\fR will be pointer to the structure to initialize
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+
+struct MyStructure {
+    int x;
+    int y;
+
+    LIBERROR_STATE();
+.br
+};
+
+int main(void) {
+    struct MyStructure structure;
+
+    structure.x = 1;
+    structure.y = 1;
+    LIBERROR_STATE_INIT(&structure);
+}
+.SH SEE ALSO
+cware(cware), liberror(cware)

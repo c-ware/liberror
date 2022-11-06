@@ -56,12 +56,25 @@
  * @embed: LIBERROR_IS_VALUE
  * @show_brief: 0
  *
+ * @embed: LIBERROR_IS_GREATER
+ * @show_brief: 0
+ *
+ * @embed: LIBERROR_IS_READONLY
+ * @show_brief: 0
+ *
+ * @embed: LIBERROR_STATE
+ * @show_brief: 0
+ *
+ * @embed: LIBERROR_STATE_INIT
+ * @show_brief: 0
+ *
  * @description
  * @A collection of macros used for runtime safety checks, like checking if a
  * @pointer is NULL, if an index is out of the bounds, as well as context-specific
- * @macros like file opening failure, and malloc failure.
+ * @macros like file opening failure, and malloc failure. It can even be used
+ * @to prevent the programmer from using read-only data with the state system.
  * @
- * @Since safety checks can take a toll on higher-performance applications,
+ * @Since safety checks can take a toll on higher-performance applications, so
  * @the macros provided by \Bliberror\B(cware) are togglable at compile time
  * @by defining the \BLIBERROR_ENABLED\B macro.
  * @
@@ -71,6 +84,8 @@
  * @\B#define LIBERROR_STREAM   stderr\B\N
  * @\B#define LIBERROR_ENABLED\B
  * @
+ * @Each of the macros shown in the synopsis have their own corresponding
+ * @manual page.
  * @description
  *
  * @reference: cware(cware)
@@ -81,12 +96,88 @@
 #ifndef CWARE_LIBERROR_H
 #define CWARE_LIBERROR_H
 
+/* The various error states a structure can be in */
+#define LIBERROR_STATE_OK       0
+#define LIBERROR_STATE_READONLY 1
+
 /* The file stream to write to */
 #if !defined(LIBERROR_STREAM)
 #   define LIBERROR_STREAM  stderr
 #endif
 
 #if defined(LIBERROR_ENABLED)
+
+/* 
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_STATE
+ * @brief: generate the state object
+ *
+ * @description
+ * @This macro function will generate an object which represents
+ * @the state of a structure, like whether or not it is readonly,
+ * @freed, etc.
+ * @description
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @struct MyStructure {
+ * @    int x;
+ * @    int y;
+ * @
+ * @    LIBERROR_STATE();\N
+ * @};
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_STATE() \
+    int liberror_state
+
+/* 
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_STATE_INIT
+ * @brief: initialize the state object in a structure
+ *
+ * @description
+ * @This macro function will initialize the state object in a structure
+ * @to have a default value of LIBERROR_STATE_OK.
+ * @description
+ * 
+ * @mparam: container
+ * @brief: pointer to the structure to initialize
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @struct MyStructure {
+ * @    int x;
+ * @    int y;
+ * @
+ * @    LIBERROR_STATE();\N
+ * @};
+ * @
+ * @int main(void) {
+ * @    struct MyStructure structure;
+ * @
+ * @    structure.x = 1;
+ * @    structure.y = 1;
+ * @    LIBERROR_STATE_INIT(&structure);
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_STATE_INIT(container) \
+    (container)->liberror_state = LIBERROR_STATE_OK
 
 /*
  * @docgen_start
@@ -316,6 +407,109 @@
         fprintf(LIBERROR_STREAM, "%s cannot equal %s (%s:%i)\n", repr_value, repr_is, __FILE__, __LINE__); \
         abort();                                                                                           \
     } while(0)
+ 
+/*
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_GREATER
+ * @brief: error if a value is greater than another
+ *
+ * @include: liberror/liberror.h
+ *
+ * @description
+ * @This macro will produce an error message if a value provided to it is
+ * @greater than another one.
+ * @description
+ *
+ * @mparam: x
+ * @brief: the value that should be smaller
+ *
+ * @mparam: y
+ * @brief: the value that should be bigger
+ *
+ * @mparam: repr_x
+ * @brief: the string representation of the first value
+ *
+ * @mparam: repr_y
+ * @brief: the string representation of the second value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @int main() {
+ * @    int x = 3;
+ * @
+ * @    LIBERROR_IS_GREATER(x, 1, "x", "1");
+ * @
+ * @    return 0;\N
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_IS_GREATER(x, y, repr_x, repr_y)                                                          \
+    do {                                                                                                   \
+        if((x) < (y))                                                                                      \
+            break;                                                                                         \
+                                                                                                           \
+        fprintf(LIBERROR_STREAM, "%s is greater than %s (%s:%i)\n", repr_x, repr_y, __FILE__, __LINE__);   \
+        abort();                                                                                           \
+    } while(0)
+
+/*
+ * @docgen_start
+ * @type: macro_function
+ * @name: LIBERROR_IS_READONLY
+ * @brief: error if a value is read only
+ *
+ * @include: liberror/liberror.h
+ *
+ * @description
+ * @This macro will produce an error message if a value provided to it has a
+ * @member called "liberror_state", and is set to LIBERROR_STATE_READONLY.
+ * @description
+ *
+ * @mparam: value
+ * @brief: the value to check
+ *
+ * @mparam: repr_value
+ * @brief: the string representation of the value
+ *
+ * @examples
+ * @#include "liberror/liberror.h"
+ * @
+ * @struct MyStructure {
+ * @    int x;
+ * @    int y;
+ * @
+ * @    LIBERROR_STATE();
+ * @};
+ * @
+ * @int main() {
+ * @    struct MyStructure structure = {0, 0, 0};
+ * @
+ * @    LIBERROR_IS_READONLY(structure, "structure");
+ * @
+ * @    return 0;\N
+ * @}
+ * @examples
+ *
+ * @reference: cware(cware)
+ * @reference: liberror(cware)
+ *
+ * @docgen_end
+*/
+#define LIBERROR_IS_READONLY(value, repr_value)                                                                                  \
+    do {                                                                                                                         \
+        if((value).liberror_state == LIBERROR_STATE_READONLY)                                                                                       \
+            break;                                                                                                               \
+                                                                                                                                 \
+        fprintf(LIBERROR_STREAM, "Attempt to use a pass a read-only value into '%s' (%s:%i)\n", repr_value, __FILE__, __LINE__); \
+        abort();                                                                                                                 \
+    } while(0)
 
 /*
  * ==========================
@@ -353,7 +547,7 @@
  * @
  * @    free(x);
  * @
- * @    return 0;
+ * @    return 0;\N
  * @}
  * @examples
  *
@@ -404,7 +598,7 @@
  * @
  * @    free(x);
  * @
- * @    return 0;
+ * @    return 0;\N
  * @}
  * @examples
  *
@@ -424,11 +618,16 @@
 
 #else
 
+#define LIBERROR_STATE()
+#define LIBERROR_STATE_INIT(container)
+
 #define LIBERROR_IS_NULL(value, repr)
 #define LIBERROR_IS_OOB(check, end)
 #define LIBERROR_IS_NEGATIVE(value, repr)
 #define LIBERROR_IS_POSITIVE(value, repr)
 #define LIBERROR_IS_VALUE(value, is, repr_value, repr_is)
+#define LIBERROR_IS_GREATER(x, y, repr_x, repr_y)
+#define LIBERROR_IS_READONLY(value, repr_value)
 #define LIBERROR_MALLOC_FAILURE(value, repr)
 #define LIBERROR_FILE_OPEN_FAILURE(value, repr, file_path)
 

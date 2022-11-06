@@ -1,0 +1,38 @@
+.TH "LIBERROR_IS_READONLY" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_IS_READONLY - error if a value is read only
+.SH SYNOPSIS
+#include "liberror/liberror.h"
+.br
+
+\fB#define LIBERROR_IS_READONLY(\fR\fIvalue\fR\fB,\fR \fIrepr_value\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro will produce an error message if a value provided to it has a
+member called "liberror_state", and is set to LIBERROR_STATE_READONLY.
+
+
+\fIvalue\fR will be the value to check
+.br
+\fIrepr_value\fR will be the string representation of the value
+.br
+.SH EXAMPLES
+#include "liberror/liberror.h"
+
+struct MyStructure {
+    int x;
+    int y;
+
+    LIBERROR_STATE();
+};
+
+int main() {
+    struct MyStructure structure = {0, 0, 0};
+
+    LIBERROR_IS_READONLY(structure, "structure");
+
+    return 0;
+.br
+}
+.SH SEE ALSO
+cware(cware), liberror(cware)

@@ -1,0 +1,22 @@
+.TH "LIBERROR_STATE" "cware" "Nov 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+LIBERROR_STATE - generate the state object
+.SH SYNOPSIS
+\fB#define LIBERROR_STATE(\fR\fB);\fR
+.br
+.SH DESCRIPTION
+This macro function will generate an object which represents
+the state of a structure, like whether or not it is readonly,
+freed, etc.
+.SH EXAMPLES
+#include "liberror/liberror.h"
+
+struct MyStructure {
+    int x;
+    int y;
+
+    LIBERROR_STATE();
+.br
+};
+.SH SEE ALSO
+cware(cware), liberror(cware)
